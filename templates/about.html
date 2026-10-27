@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - My Python Website</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <div class="badge">📖 Documentation</div>
+    <h1>About This Website</h1>
+    <p>This web application demonstrates how Python functions as a web server:</p>
+    
+    <div class="features-box">
+      <ul>
+        <li><strong>Server-side logic:</strong> Handles incoming HTTP requests using Flask.</li>
+        <li><strong>Jinja2 templating:</strong> Seamlessly injects Python variables into HTML.</li>
+        <li><strong>Form handling:</strong> Processes user input sent via HTTP POST methods.</li>
+      </ul>
+    </div>
+
+    <nav class="nav-links">
+      <a href="/">&larr; Back to Home Page</a>
+    </nav>
+  </div>
+</body>
+</html>

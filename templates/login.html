@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔒 Secret Birthday Portal - Password Required</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0f19;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(114, 9, 183, 0.4) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(247, 37, 133, 0.3) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(76, 201, 240, 0.15) 0px, transparent 60%);
+      font-family: 'Outfit', sans-serif;
+      padding: 20px;
+    }
+
+    .lock-card {
+      background: rgba(18, 24, 38, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px;
+      padding: 45px 35px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(247, 37, 133, 0.2);
+      animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .lock-icon-wrapper {
+      font-size: 55px;
+      margin-bottom: 15px;
+      display: inline-block;
+      filter: drop-shadow(0 0 16px rgba(247, 37, 133, 0.6));
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .lock-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 30%, #ffd166 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lock-subtitle {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .lock-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .password-input-group {
+      position: relative;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(11, 15, 25, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1.05rem;
+      text-align: center;
+      letter-spacing: 2px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .password-input:focus {
+      border-color: #f72585;
+      box-shadow: 0 0 0 4px rgba(247, 37, 133, 0.25);
+      background: rgba(11, 15, 25, 0.95);
+    }
+
+    .btn-unlock {
+      background: linear-gradient(135deg, #f72585, #7209b7);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(247, 37, 133, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-unlock:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(247, 37, 133, 0.6);
+    }
+
+    .error-banner {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .default-hint {
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .default-hint code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #ffd166;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lock-card">
+    <div class="lock-icon-wrapper">🔐</div>
+    <h1 class="lock-title">Secret Birthday Portal</h1>
+    <p class="lock-subtitle">Please enter the secret passcode to unlock the surprise studio!</p>
+
+    {% if error %}
+      <div class="error-banner">{{ error }}</div>
+    {% endif %}
+
+    <form action="/login" method="POST" class="lock-form">
+      <div class="password-input-group">
+        <input 
+          type="password" 
+          name="password" 
+          class="password-input" 
+          placeholder="Enter secret passcode..." 
+          required 
+          autofocus 
+        />
+      </div>
+      <button type="submit" class="btn-unlock">
+        <span>🔓</span> Unlock Surprise Studio
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

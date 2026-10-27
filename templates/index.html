@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Magic Studio ðŸŽ‚ - Wishes, Surprise Videos & Interactive Greetings</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <!-- Favicon emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ðŸŽ‚</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Header -->
+    <header class="main-header">
+      <div class="brand-wrapper">
+        <span class="brand-icon">ðŸŽ‚</span>
+        <div>
+          <h1 class="brand-title">Birthday Magic Studio</h1>
+          <p class="brand-subtitle">Create personalized wishes, surprise videos, and interactive celebrations</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <a href="/logout" class="btn-toggle-sound" style="text-decoration: none;" title="Lock website">
+          🔒 Lock Studio
+        </a>
+        <button id="toggle-sound-btn" class="btn-toggle-sound" title="Toggle audio sound">
+          🔊 Sound: On
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-bar" role="tablist">
+      <button class="nav-tab-btn active" data-tab="tab-wishes" role="tab">
+        <span>âœï¸</span> Wishes Creator
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-video" role="tab">
+        <span>ðŸŽ¬</span> Surprise Video Maker
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-surprises" role="tab">
+        <span>ðŸŽ</span> Interactive Surprises
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-code" role="tab">
+        <span>ðŸ’»</span> Code Playground
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-guide" role="tab">
+        <span>ðŸ“–</span> Beginner Guide
+      </button>
+    </nav>
+
+    <!-- ====================================================================
+         TAB 1: WISHES CREATOR
+         ==================================================================== -->
+    <section id="tab-wishes" class="app-section-view active">
+      <div class="section-hero-header">
+        <h2>Personalized Birthday Wishes Creator</h2>
+        <p>Design a beautiful greeting card with custom themes, sweet messages, animations, and photos.</p>
+      </div>
+
+      <div class="studio-layout">
+        <!-- Controls Column -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸŽ¨</span> Customize Greeting</h3>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="wish-name">Birthday Person's Name</label>
+              <input type="text" id="wish-name" class="input-styled" value="Alex" placeholder="e.g., Emily, John" />
+            </div>
+            <div class="form-group">
+              <label for="wish-age">Age / Milestone (Optional)</label>
+              <input type="text" id="wish-age" class="input-styled" placeholder="e.g., 21st, Sweet 16, 30th" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="wish-relation">Relationship</label>
+              <select id="wish-relation" class="select-styled">
+                <option value="Friend">Best Friend</option>
+                <option value="Soulmate">Soulmate / Partner</option>
+                <option value="Sister">Sister</option>
+                <option value="Brother">Brother</option>
+                <option value="Mother">Mom</option>
+                <option value="Father">Dad</option>
+                <option value="Colleague">Colleague / Mentor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="wish-sender">Your Name (Sender)</label>
+              <input type="text" id="wish-sender" class="input-styled" value="With Love & Hugs" placeholder="e.g., Keerthi" />
+            </div>
+          </div>
+
+          <!-- Photo Upload Feature -->
+          <div class="form-group">
+            <label>Upload Birthday Person's Photo</label>
+            <div id="photo-upload-container" class="photo-upload-box" onclick="document.getElementById('wish-photo-input').click()">
+              <input type="file" id="wish-photo-input" accept="image/*" style="display: none;" />
+              <div class="upload-prompt">
+                <span class="upload-icon">ðŸ“¸</span>
+                <strong>Click to choose a photo</strong>
+                <small>Supports JPG, PNG, WebP</small>
+              </div>
+              <div class="photo-preview-wrapper">
+                <img id="wish-photo-preview" class="photo-preview-img" alt="Uploaded Photo" />
+                <button type="button" id="remove-photo-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="event.stopPropagation();">Remove Photo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Themes & Animations -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="wish-theme">Color Theme</label>
+              <select id="wish-theme" class="select-styled">
+                <option value="rose">ðŸŒ¸ Sunset Blush (Rose & Gold)</option>
+                <option value="neon">ðŸŒŒ Cosmic Neon (Cyber Blue)</option>
+                <option value="gold">âœ¨ Golden Royale (Luxury Black)</option>
+                <option value="mint">ðŸŒ¿ Emerald Sparkle (Mint Teal)</option>
+                <option value="candy">ðŸ­ Carnival Fiesta (Vibrant Party)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="wish-animation">Celebration Animation</label>
+              <select id="wish-animation" class="select-styled">
+                <option value="confetti">ðŸŽ‰ Falling Colorful Confetti</option>
+                <option value="none">âœ¨ Elegant Ambient Glow</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Message & Quote Generator -->
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label for="wish-message" style="margin-bottom: 0;">Special Birthday Message</label>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="quote-category" class="select-styled" style="padding: 4px 8px; font-size: 0.8rem; width: auto;">
+                  <option value="heartfelt">Heartfelt</option>
+                  <option value="funny">Humorous</option>
+                  <option value="inspirational">Inspiring</option>
+                  <option value="sweet">Sweet</option>
+                </select>
+                <button type="button" id="random-quote-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">ðŸŽ² Insert Quote</button>
+              </div>
+            </div>
+            <textarea id="wish-message" class="textarea-styled" rows="4">May your special day be brimming with boundless smiles, sweet moments, and all the love your heart can hold!</textarea>
+          </div>
+        </div>
+
+        <!-- Live Preview Column -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸ‘€</span> Live Card Preview</h3>
+            <button id="celebrate-card-btn" class="btn-secondary" style="padding: 6px 14px; font-size: 0.85rem;">
+              ðŸŽ‰ Celebrate!
+            </button>
+          </div>
+
+          <!-- Live Card Stage -->
+          <div id="card-live-preview" class="card-stage-wrapper">
+            <canvas id="confetti-canvas"></canvas>
+            <!-- Card rendered dynamically by wishes-creator.js -->
+          </div>
+
+          <div class="card-actions-bar">
+            <button id="download-card-html-btn" class="btn-primary" style="flex: 1;">
+              ðŸ“¥ Download Standalone HTML Card
+            </button>
+          </div>
+          <small style="display: block; margin-top: 10px; color: var(--text-muted); text-align: center;">
+            ðŸ’¡ The downloaded HTML card can be opened on any phone or laptop, even completely offline!
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 2: SURPRISE VIDEO CREATOR
+         ==================================================================== -->
+    <section id="tab-video" class="app-section-view">
+      <div class="section-hero-header">
+        <h2>Surprise Video Creator</h2>
+        <p>Combine photos, captions, smooth animated transitions, and music into a video you can download and share.</p>
+      </div>
+
+      <div class="studio-layout">
+        <!-- Controls & Photo List -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸŽžï¸</span> Photo Montage & Story</h3>
+          </div>
+
+          <div class="form-group">
+            <label>Upload Multiple Photos</label>
+            <input type="file" id="video-photo-input" class="input-styled" accept="image/*" multiple />
+            <small style="color: var(--text-muted); display: block; margin-top: 5px;">
+              Tip: Select 3 to 10 photos of memorable moments!
+            </small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="video-music-select">Background Music</label>
+              <select id="video-music-select" class="select-styled">
+                <option value="synth">ðŸŽµ Cheerful Birthday Synth Melody</option>
+                <option value="custom">ðŸ“ Custom Audio File (Upload Below)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="video-overlay-select">Stickers / Frame</label>
+              <select id="video-overlay-select" class="select-styled">
+                <option value="sparkles">âœ¨ Golden Sparkles</option>
+                <option value="balloons">ðŸŽˆ Balloons & Confetti</option>
+                <option value="none">Plain & Clean</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="video-custom-music">Upload Custom Music / Song (Optional MP3)</label>
+            <input type="file" id="video-custom-music" class="input-styled" accept="audio/*" />
+          </div>
+
+          <!-- Timeline Photos -->
+          <div class="slides-timeline-container">
+            <label>Photo Slides & Captions (Drag/Reorder):</label>
+            <div id="slides-timeline-list" class="slides-timeline-list">
+              <!-- Dynamically populated by video-maker.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Player & Canvas Export -->
+        <div class="glass-panel video-preview-panel">
+          <div class="panel-header">
+            <h3><span>ðŸ“º</span> Video Preview Player</h3>
+          </div>
+
+          <div class="canvas-player-wrapper">
+            <canvas id="video-canvas"></canvas>
+            <div class="video-progress-track">
+              <div id="video-progress-bar" class="video-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="video-controls-toolbar">
+            <button id="video-play-btn" class="btn-secondary">
+              â–¶ï¸ Play Surprise Video
+            </button>
+            <button id="video-export-btn" class="btn-primary">
+              â¬‡ï¸ Export & Download Video (.webm)
+            </button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: var(--radius-md); font-size: 0.88rem; color: var(--text-muted);">
+            âœ¨ <strong>How it works:</strong> The video engine stitches your photos, animates a cinematic Ken Burns zoom, synchronizes the birthday melody, and records it directly inside your browser without needing external servers!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 3: INTERACTIVE SURPRISE GREETINGS
+         ==================================================================== -->
+    <section id="tab-surprises" class="app-section-view">
+      <div class="section-hero-header">
+        <h2>Interactive Surprise Greetings</h2>
+        <p>Fun, playful interactions: unwrap a 3D gift, pop floating balloons, blow birthday candles, and scratch secret cards!</p>
+      </div>
+
+      <div class="surprises-grid">
+        <!-- 1. Mystery Gift Box -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸŽ</span> The Mystery Gift Box</h3>
+            <button id="reset-gift-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">Wrap Again</button>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; text-align: center;">Click the gift box to open the surprise!</p>
+
+          <div id="gift-interactive-wrapper" class="gift-interactive-wrapper">
+            <div class="gift-box-3d" id="mystery-gift-box">
+              <div class="gift-lid">
+                <div class="gift-bow">ðŸŽ€</div>
+              </div>
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+
+            <!-- Content revealed inside the box -->
+            <div class="gift-content-surprise">
+              <span style="font-size: 40px;">ðŸ’–</span>
+              <h4 style="font-size: 1.3rem; margin: 8px 0; color: #f72585;">A Special Gift For You!</h4>
+              <p style="font-size: 0.95rem; line-height: 1.5; color: #334155;">
+                "You are the most precious gift to the world. May your year be packed with magic, smiles, and laughter!"
+              </p>
+              <div style="margin-top: 12px; font-weight: bold; color: #7209b7;">Happy Birthday! ðŸŽ‚âœ¨</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Balloon Pop Arena -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸŽˆ</span> Balloon Pop Arena</h3>
+            <button id="spawn-balloons-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">+ More Balloons</button>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.88rem; color: var(--text-muted);">
+            <span>Click balloons to pop them!</span>
+            <span>Popped: <strong id="popped-counter" style="color: var(--accent-gold);">0</strong></span>
+          </div>
+
+          <div class="balloon-arena-wrapper">
+            <div id="balloon-arena" class="balloon-arena"></div>
+            <div class="collected-wishes-tray" id="collected-wishes-tray">
+              <div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding-top: 10px;">
+                ðŸŽˆ Popped wishes will appear here...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Candle Blow-Out & Fireworks -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸŽ‚</span> Make a Wish & Blow Candles</h3>
+            <button id="relight-candle-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">ðŸ”¥ Relight</button>
+          </div>
+
+          <div id="cake-stage-container" class="cake-stage-container">
+            <div class="interactive-cake">
+              <div class="cake-candle">
+                <div class="cake-candle-flame"></div>
+              </div>
+              <div class="cake-tier-top"></div>
+              <div class="cake-tier-bottom"></div>
+            </div>
+
+            <div id="cake-wish-status" style="margin-bottom: 20px;">
+              <p class="make-wish-hint" style="color: var(--text-muted); font-size: 0.95rem;">
+                Make a silent wish in your heart, then blow the candles!
+              </p>
+            </div>
+
+            <button id="blow-candle-btn" class="btn-primary">
+              ðŸ’¨ Blow Out The Candle!
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Scratch-Off Reveal Card -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <h3><span>ðŸ’Œ</span> Magic Scratch-Off Card</h3>
+            <button id="reset-scratch-btn" class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">Cover Again</button>
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; text-align: center;">
+            Scratch off the silver layer using your mouse or finger!
+          </p>
+
+          <div class="scratch-stage-wrapper">
+            <!-- Hidden secret content underneath -->
+            <div class="scratch-hidden-content">
+              <span style="font-size: 40px; margin-bottom: 5px;">ðŸ‘‘</span>
+              <h3 style="font-size: 1.4rem; font-weight: 800;">YOU ARE AMAZING!</h3>
+              <p style="font-size: 0.95rem; margin-top: 6px; opacity: 0.95;">
+                "Behind every year is a story of strength, beauty, and kindness. Celebrating you today!"
+              </p>
+              <span style="margin-top: 10px; font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 12px;">ðŸŒŸ Happy Birthday ðŸŒŸ</span>
+            </div>
+            <!-- Canvas silver scratch foil on top -->
+            <canvas id="scratch-card-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 4: CODE EXECUTION FEATURE
+         ==================================================================== -->
+    <section id="tab-code" class="app-section-view">
+      <div class="section-hero-header">
+        <h2>Live Code Execution Playground</h2>
+        <p>Enter, paste, and run HTML, CSS, and JavaScript code to instantly see animated birthday greetings rendered live on the website.</p>
+      </div>
+
+      <div class="glass-panel">
+        <div class="editor-toolbar">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <label for="code-template-select" style="margin-bottom: 0;">Birthday Code Templates:</label>
+            <select id="code-template-select" class="select-styled" style="width: auto; padding: 6px 14px; font-size: 0.88rem;">
+              <!-- Populated by code-runner.js -->
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="copy-code-btn" class="btn-secondary" style="padding: 6px 14px; font-size: 0.85rem;">ðŸ“‹ Copy Code</button>
+            <button id="clear-code-btn" class="btn-secondary" style="padding: 6px 14px; font-size: 0.85rem;">ðŸ§¹ Clear</button>
+            <button id="run-code-btn" class="btn-primary" style="padding: 6px 18px; font-size: 0.88rem;">â–¶ï¸ Run Code (Ctrl+Enter)</button>
+          </div>
+        </div>
+
+        <div class="code-playground-layout">
+          <!-- Code Editor Textarea -->
+          <div class="editor-wrapper">
+            <textarea id="code-editor-input" class="code-textarea" spellcheck="false" placeholder="Write or paste your HTML, CSS, and JS code here..."></textarea>
+          </div>
+
+          <!-- Preview & Console -->
+          <div class="preview-wrapper">
+            <iframe id="code-preview-frame" class="output-iframe" sandbox="allow-scripts allow-modals"></iframe>
+            <div id="code-console-output" class="console-output-box">
+              <div class="console-msg msg-info"><span class="text">Console ready. Click 'Run Code' to execute.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 5: COMPLETE BEGINNER GUIDE & DEPLOYMENT
+         ==================================================================== -->
+    <section id="tab-guide" class="app-section-view">
+      <div class="section-hero-header">
+        <h2>Complete Beginner Website Development Guide</h2>
+        <p>A step-by-step walkthrough of how this website is structured, how to run it locally, test it, and deploy it online for free.</p>
+      </div>
+
+      <div class="guide-card-stack">
+        <!-- Step 1 -->
+        <div class="guide-step-card">
+          <span class="step-badge">Phase 1: Understanding The Architecture</span>
+          <h3>ðŸ› ï¸ Tools & Technologies Used</h3>
+          <p>
+            This website is built with <strong>pure, modern Web Standards (HTML5, CSS3, and JavaScript)</strong>. Here is why this is the perfect architecture for beginners:
+          </p>
+          <ul style="margin: 12px 0 12px 20px; line-height: 1.8;">
+            <li><strong>Zero Complex Setups:</strong> No Node.js, npm, compilers, or server databases required to run or edit!</li>
+            <li><strong>Web Audio API:</strong> Synthesizes authentic musical tones (chimes, pops, cheerful birthday melodies) directly in the browser with 0 external sound files.</li>
+            <li><strong>HTML5 Canvas & MediaRecorder API:</strong> Allows real-time video composition, Ken Burns transitions, and direct video file recording (`.webm`).</li>
+            <li><strong>Sandboxed Iframe Execution:</strong> Runs custom birthday code safely and captures console output in real time.</li>
+          </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="guide-step-card">
+          <span class="step-badge">Phase 2: Project Folder Structure</span>
+          <h3>ðŸ“ How Files Are Organized</h3>
+          <div class="code-snippet">
+birthday-surprise-app/
+â”œâ”€â”€ index.html            <- Main Web App UI (Tabs, Forms, Stages)
+â”œâ”€â”€ css/
+â”‚   â””â”€â”€ styles.css        <- Visual Design, Glassmorphism, Responsive CSS, Animations
+â”œâ”€â”€ js/
+â”‚   â”œâ”€â”€ app.js            <- Core App Coordinator, Navigation, Toast Alerts
+â”‚   â”œâ”€â”€ audio-synth.js    <- Synthesizer for birthday song, pops, chimes, fireworks
+â”‚   â”œâ”€â”€ wishes-creator.js <- Birthday card customizer, quotes, HTML export
+â”‚   â”œâ”€â”€ video-maker.js    <- Multi-photo slideshow, transitions, video recorder
+â”‚   â”œâ”€â”€ surprises.js      <- 3D gift box, balloon pop, candle blow, scratch card
+â”‚   â””â”€â”€ code-runner.js    <- Code editor & live sandboxed runner with templates
+â””â”€â”€ README.md             <- Quick reference documentation
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="guide-step-card">
+          <span class="step-badge">Phase 3: How to Run It on Your Computer</span>
+          <h3>ðŸ’» Running Locally in 5 Seconds</h3>
+          <p>You can run this website on Windows using any of these simple methods:</p>
+          <ol style="margin: 12px 0 12px 25px; line-height: 1.9;">
+            <li><strong>Method 1 (Instant):</strong> Open your file explorer, navigate to the <code>birthday-surprise-app</code> folder, and double-click <code>index.html</code>. It will open in Google Chrome, Microsoft Edge, or Firefox!</li>
+            <li><strong>Method 2 (VS Code Live Server):</strong> If you use Visual Studio Code, install the free extension <em>"Live Server"</em>, right-click <code>index.html</code>, and click <em>"Open with Live Server"</em>.</li>
+            <li><strong>Method 3 (Python command):</strong> If you have Python installed, open PowerShell in the folder and type:
+              <div class="code-snippet">python -m http.server 8000</div>
+              Then open your browser to <code>http://localhost:8000</code>.
+            </li>
+          </ol>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="guide-step-card">
+          <span class="step-badge">Phase 4: How to Deploy Online for Free</span>
+          <h3>ðŸŒ Make It Accessible to Anyone via a Web Link</h3>
+          <p>
+            Once you have customized your website, you can host it online completely free so friends and family can visit it from their phones or computers:
+          </p>
+          <div style="margin-top: 15px;">
+            <h4 style="color: var(--accent); margin-bottom: 6px;">Option A: Netlify Drop (Easiest - 60 Seconds, No Git Needed!)</h4>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+              <li>Go to <a href="https://app.netlify.com/drop" target="_blank" style="color: var(--primary);">app.netlify.com/drop</a> in your browser.</li>
+              <li>Sign up for a free account.</li>
+              <li>Drag and drop your entire <code>birthday-surprise-app</code> folder right onto the screen!</li>
+              <li>Netlify instantly gives you a live public link (e.g., <code>https://my-birthday-surprise.netlify.app</code>).</li>
+            </ol>
+          </div>
+          <div style="margin-top: 15px;">
+            <h4 style="color: var(--accent-gold); margin-bottom: 6px;">Option B: GitHub Pages (Free Permanent Hosting)</h4>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+              <li>Create a free account on <a href="https://github.com" target="_blank" style="color: var(--primary);">GitHub.com</a>.</li>
+              <li>Create a new repository named <code>birthday-surprise</code>.</li>
+              <li>Upload all files from your <code>birthday-surprise-app</code> folder.</li>
+              <li>Go to <strong>Settings -> Pages</strong>, choose branch <strong>main</strong>, and click <strong>Save</strong>.</li>
+              <li>Your site is live at <code>https://yourusername.github.io/birthday-surprise/</code>!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/audio-synth.js"></script>
+  <script src="/static/js/wishes-creator.js"></script>
+  <script src="/static/js/video-maker.js"></script>
+  <script src="/static/js/surprises.js"></script>
+  <script src="/static/js/code-runner.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
+
