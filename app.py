@@ -10,7 +10,7 @@ app.secret_key = 'birthday-magic-secret-key-2026'
 # 🔑 SET YOUR PASSWORD HERE
 # You can change this to any password or PIN you want!
 # -------------------------------------------------------------
-SECRET_PASSWORD = "Ratna@22#"
+SECRET_PASSWORD = "keerthiratnababu"
 
 
 # 1. Main Home Page (Protected by Password)
