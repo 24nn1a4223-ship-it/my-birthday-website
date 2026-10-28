@@ -202,6 +202,25 @@ class WishesCreator {
     }
   }
 
+  loadWishesData(data) {
+    if (!data) return;
+    if (data.name !== undefined && this.nameInput) this.nameInput.value = data.name;
+    if (data.age !== undefined && this.ageInput) this.ageInput.value = data.age;
+    if (data.relation !== undefined && this.relationSelect) this.relationSelect.value = data.relation;
+    if (data.sender !== undefined && this.senderInput) this.senderInput.value = data.sender;
+    if (data.message !== undefined && this.messageInput) this.messageInput.value = data.message;
+    if (data.themeKey !== undefined && this.themeSelect) this.themeSelect.value = data.themeKey;
+    if (data.animation !== undefined && this.animationSelect) this.animationSelect.value = data.animation;
+    if (data.photo) {
+      this.uploadedPhotoData = data.photo;
+      if (this.photoPreviewImg) {
+        this.photoPreviewImg.src = data.photo;
+        document.getElementById('photo-upload-container')?.classList.add('has-image');
+      }
+    }
+    this.updatePreview(false);
+  }
+
   getFormData() {
     return {
       name: (this.nameInput?.value || '').trim() || "Alex",

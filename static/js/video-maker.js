@@ -72,6 +72,28 @@ class VideoMaker {
     }
   }
 
+  loadSlidesData(savedSlides) {
+    if (!savedSlides || !savedSlides.length) return;
+    this.slides = [];
+    let loaded = 0;
+    savedSlides.forEach((item, index) => {
+      const img = new Image();
+      img.onload = () => {
+        this.slides.push({
+          id: item.id || 'slide_' + Math.random().toString(36).substr(2, 9),
+          img: img,
+          caption: item.caption || ''
+        });
+        loaded++;
+        if (loaded === savedSlides.length) {
+          this.renderSlidesTimeline();
+          this.renderStaticFrame(0);
+        }
+      };
+      img.src = item.url;
+    });
+  }
+
   // Sample starter slides so user immediately sees what the video creator looks like!
   loadDefaultSampleSlides() {
     const starterPhotos = [

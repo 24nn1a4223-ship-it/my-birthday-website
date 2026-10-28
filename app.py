@@ -1,10 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+import json
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # Allow up to 50MB for photos
 
 # A secret key is required by Flask to securely encrypt session cookies
 app.secret_key = 'birthday-magic-secret-key-2026'
+
+DATA_FILE = os.path.join(os.path.dirname(__file__), 'surprise_data.json')
 
 # -------------------------------------------------------------
 # 🔑 SET YOUR PASSWORD HERE
@@ -43,6 +47,35 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
+
+# 4. Save Surprise Data API (Saves customized greetings & photos)
+@app.route('/api/save-surprise', methods=['POST'])
+def save_surprise():
+    if not session.get('authenticated'):
+        return jsonify({'error': 'Unauthorized'}), 401
+    try:
+        data = request.get_json(force=True)
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        return jsonify({'status': 'success', 'message': 'Birthday surprise saved successfully!'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+# 5. Get Saved Surprise Data API (Loads customized greetings & photos)
+@app.route('/api/get-surprise', methods=['GET'])
+def get_surprise():
+    if not session.get('authenticated'):
+        return jsonify({'error': 'Unauthorized'}), 401
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return jsonify({'status': 'success', 'data': data})
+        except Exception:
+            return jsonify({'status': 'empty', 'data': None})
+    return jsonify({'status': 'empty', 'data': None})
 
 
 if __name__ == '__main__':
