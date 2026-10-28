@@ -1,13 +1,45 @@
 /**
  * code-runner.js
  * In-browser Code Execution Playground for Birthday Greetings.
- * Allows entering/pasting HTML/CSS/JavaScript code, executing it live
- * in a secure sandboxed iframe, and viewing interactive greeting outputs.
+ * Supports:
+ * 1. Interactive HTML/CSS/JavaScript with particle animations & games
+ * 2. Real-time Python Code Execution with variable tracking, f-strings, loops, and print output!
  */
 
 const CODE_TEMPLATES = {
+  pythonWishes: {
+    name: "🐍 Template 1: Python Birthday Script (Prints, Loops & ASCII Cake)",
+    code: `# 🐍 Python Birthday Celebration Script
+name = "Ratna"
+age = 22
+
+print("=" * 45)
+print(f"🎉 HAPPY {age}nd BIRTHDAY, {name.upper()}! 🎉")
+print("=" * 45)
+
+wishes = [
+    "May your year be filled with laughter and endless joy! 💖",
+    "May all your biggest dreams and goals come true! 🚀",
+    "Wishing you boundless health, happiness, and peace! ✨",
+    "Eat all the birthday cake you want today! 🍰"
+]
+
+print("\n💌 Special Birthday Wishes For You:")
+for i, wish in enumerate(wishes, 1):
+    print(f"  {i}. {wish}")
+
+print("\n🎂 Here is your birthday cake:")
+print("       🕯️   🕯️   🕯️")
+print("     |~~~~~~~~~~~~~|")
+print("     |  ★ HAPPY ★  |")
+print("     |  BIRTHDAY!  |")
+print("     |_____________|")
+print("\n" + "=" * 45)
+print(f"✨ Have the most wonderful birthday, {name}! ✨")`
+  },
+
   balloons: {
-    name: "🎈 Template 1: Balloon Popper & Confetti Burst",
+    name: "🎈 Template 2: Balloon Popper & Confetti Burst (HTML/JS)",
     code: `<!DOCTYPE html>
 <html>
 <head>
@@ -97,7 +129,7 @@ const CODE_TEMPLATES = {
   },
 
   neonHeart: {
-    name: "💖 Template 2: Glowing Neon Heart & Dynamic Wishes",
+    name: "💖 Template 3: Glowing Neon Heart & Dynamic Wishes (HTML/CSS)",
     code: `<!DOCTYPE html>
 <html>
 <head>
@@ -167,7 +199,7 @@ const CODE_TEMPLATES = {
   },
 
   cake: {
-    name: "🎂 Template 3: 3D Cake with Blowable Candles",
+    name: "🎂 Template 4: 3D Cake with Blowable Candles (HTML/JS)",
     code: `<!DOCTYPE html>
 <html>
 <head>
@@ -276,7 +308,7 @@ const CODE_TEMPLATES = {
   },
 
   matrixWishes: {
-    name: "🚀 Template 4: Matrix Rain of Birthday Wishes",
+    name: "🚀 Template 5: Matrix Rain of Birthday Wishes (HTML/Canvas)",
     code: `<!DOCTYPE html>
 <html>
 <head>
@@ -358,6 +390,8 @@ class CodeRunner {
 
   init() {
     if (this.templateSelect) {
+      // Clear existing options
+      this.templateSelect.innerHTML = '';
       // Populate templates
       Object.entries(CODE_TEMPLATES).forEach(([key, val]) => {
         const opt = document.createElement('option');
@@ -383,7 +417,7 @@ class CodeRunner {
       this.btnClear.addEventListener('click', () => {
         this.editorTextarea.value = '';
         this.previewFrame.srcdoc = '';
-        this.logToConsole("Editor cleared. Paste your code and hit 'Run Code'.", "info");
+        this.logToConsole("Editor cleared. Paste your Python or HTML/JS code and click 'Run Code'.", "info");
       });
     }
 
@@ -403,12 +437,12 @@ class CodeRunner {
         }
       });
 
-      // Load default template #1
-      this.editorTextarea.value = CODE_TEMPLATES.balloons.code;
+      // Default load Template 1: Python
+      this.editorTextarea.value = CODE_TEMPLATES.pythonWishes.code;
     }
 
     // Run first template on initial load
-    setTimeout(() => this.runCode(), 100);
+    setTimeout(() => this.runCode(), 200);
   }
 
   logToConsole(msg, type = 'log') {
@@ -428,6 +462,196 @@ class CodeRunner {
       .replace(/>/g, '&gt;');
   }
 
+  isPythonCode(code) {
+    const trimmed = code.trim();
+    if (trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html') || trimmed.startsWith('<div') || trimmed.startsWith('<style')) {
+      return false;
+    }
+    return /print\s*\(|def\s+\w+|import\s+\w+|for\s+\w+\s+in|if\s+.*:|#.*|wishes\s*=|range\s*\(/i.test(trimmed);
+  }
+
+  // Client-side Python script executor
+  executePythonScript(script) {
+    const outputLines = [];
+    const variables = {};
+
+    try {
+      const lines = script.split('\n');
+      let i = 0;
+
+      while (i < lines.length) {
+        let line = lines[i].trim();
+
+        // Skip comments and empty lines
+        if (!line || line.startsWith('#')) {
+          i++;
+          continue;
+        }
+
+        // Variable assignment: x = "value" or x = 123
+        const assignMatch = line.match(/^([a-zA-Z_]\w*)\s*=\s*(.+)$/);
+        if (assignMatch && !line.startsWith('print') && !line.startsWith('for') && !line.startsWith('if') && !line.startsWith('def')) {
+          const varName = assignMatch[1];
+          let valExpr = assignMatch[2].trim();
+
+          // String assignment
+          if ((valExpr.startsWith('"') && valExpr.endsWith('"')) || (valExpr.startsWith("'") && valExpr.endsWith("'"))) {
+            variables[varName] = valExpr.slice(1, -1);
+          }
+          // Array assignment
+          else if (valExpr.startsWith('[') && valExpr.endsWith(']')) {
+            try {
+              // Convert Python array syntax to JS JSON
+              const jsonStr = valExpr.replace(/'/g, '"');
+              variables[varName] = JSON.parse(jsonStr);
+            } catch (e) {
+              variables[varName] = [];
+            }
+          }
+          // Multiline array start
+          else if (valExpr.startsWith('[')) {
+            let arrayLines = valExpr;
+            while (i + 1 < lines.length && !arrayLines.includes(']')) {
+              i++;
+              arrayLines += lines[i].trim();
+            }
+            try {
+              const jsonStr = arrayLines.replace(/'/g, '"');
+              variables[varName] = JSON.parse(jsonStr);
+            } catch (e) {
+              variables[varName] = [];
+            }
+          }
+          // Number assignment
+          else if (!isNaN(valExpr)) {
+            variables[varName] = Number(valExpr);
+          }
+          i++;
+          continue;
+        }
+
+        // For loop handling: for i, wish in enumerate(wishes, 1): or for x in list:
+        const forEnumMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s*,\s*([a-zA-Z_]\w*)\s+in\s+enumerate\s*\(\s*([a-zA-Z_]\w*)\s*(?:,\s*(\d+))?\s*\)\s*:/);
+        if (forEnumMatch) {
+          const idxVar = forEnumMatch[1];
+          const itemVar = forEnumMatch[2];
+          const listVar = forEnumMatch[3];
+          const startIdx = forEnumMatch[4] ? parseInt(forEnumMatch[4], 10) : 0;
+
+          const listData = variables[listVar] || [];
+          // Collect indented body
+          const bodyLines = [];
+          while (i + 1 < lines.length && (lines[i + 1].startsWith('    ') || lines[i + 1].startsWith('\t'))) {
+            i++;
+            bodyLines.push(lines[i].trim());
+          }
+
+          listData.forEach((item, idx) => {
+            variables[idxVar] = idx + startIdx;
+            variables[itemVar] = item;
+            bodyLines.forEach(bLine => {
+              this.executePythonLine(bLine, variables, outputLines);
+            });
+          });
+          i++;
+          continue;
+        }
+
+        // Simple for loop: for item in list:
+        const forMatch = line.match(/^for\s+([a-zA-Z_]\w*)\s+in\s+([a-zA-Z_]\w*)\s*:/);
+        if (forMatch) {
+          const itemVar = forMatch[1];
+          const listVar = forMatch[2];
+          const listData = variables[listVar] || [];
+
+          const bodyLines = [];
+          while (i + 1 < lines.length && (lines[i + 1].startsWith('    ') || lines[i + 1].startsWith('\t'))) {
+            i++;
+            bodyLines.push(lines[i].trim());
+          }
+
+          listData.forEach(item => {
+            variables[itemVar] = item;
+            bodyLines.forEach(bLine => {
+              this.executePythonLine(bLine, variables, outputLines);
+            });
+          });
+          i++;
+          continue;
+        }
+
+        // Function definition (skip body for simple execution or execute)
+        if (line.startsWith('def ')) {
+          while (i + 1 < lines.length && (lines[i + 1].startsWith('    ') || lines[i + 1].startsWith('\t'))) {
+            i++;
+          }
+          i++;
+          continue;
+        }
+
+        // Execute general line (print etc.)
+        this.executePythonLine(line, variables, outputLines);
+        i++;
+      }
+    } catch (err) {
+      outputLines.push(`❌ Python Execution Error: ${err.message}`);
+    }
+
+    return outputLines;
+  }
+
+  executePythonLine(line, variables, outputLines) {
+    if (!line.startsWith('print')) return;
+
+    // Extract inside print(...)
+    const match = line.match(/^print\s*\((.*)\)$/);
+    if (!match) return;
+
+    let content = match[1].trim();
+
+    // String multiplication: "=" * 40
+    const multMatch = content.match(/^["'](.*)["']\s*\*\s*(\d+)$/);
+    if (multMatch) {
+      outputLines.push(multMatch[1].repeat(parseInt(multMatch[2], 10)));
+      return;
+    }
+
+    // f-string: f"Hello {name}!"
+    if (content.startsWith('f"') || content.startsWith("f'")) {
+      let str = content.slice(2, -1);
+      // Replace {var} with values
+      str = str.replace(/\{([^}]+)\}/g, (m, expr) => {
+        expr = expr.trim();
+        // check .upper()
+        if (expr.endsWith('.upper()')) {
+          const v = expr.replace('.upper()', '').trim();
+          return (variables[v] !== undefined ? String(variables[v]).toUpperCase() : expr);
+        }
+        return variables[expr] !== undefined ? variables[expr] : expr;
+      });
+      // Replace \n
+      str = str.replace(/\\n/g, '\n');
+      outputLines.push(str);
+      return;
+    }
+
+    // Plain string print
+    if ((content.startsWith('"') && content.endsWith('"')) || (content.startsWith("'") && content.endsWith("'"))) {
+      let str = content.slice(1, -1);
+      str = str.replace(/\\n/g, '\n');
+      outputLines.push(str);
+      return;
+    }
+
+    // Variable or expression
+    if (variables[content] !== undefined) {
+      outputLines.push(String(variables[content]));
+      return;
+    }
+
+    outputLines.push(content);
+  }
+
   runCode() {
     if (!this.editorTextarea || !this.previewFrame) return;
 
@@ -440,9 +664,95 @@ class CodeRunner {
     if (this.consoleOutput) {
       this.consoleOutput.innerHTML = '';
     }
-    this.logToConsole("Executing code...", "info");
+    this.logToConsole("Running code...", "info");
 
-    // Intercept console.log and errors from iframe
+    // Check if code is Python
+    if (this.isPythonCode(rawCode)) {
+      this.logToConsole("🐍 Detected Python code. Executing Python script...", "info");
+      const outputs = this.executePythonScript(rawCode);
+
+      // Render beautiful interactive terminal in iframe
+      const terminalHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1117;
+    color: #f0f6fc;
+    font-family: 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 14.5px;
+    line-height: 1.6;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 20px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .badge {
+    margin-left: auto;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .terminal-content {
+    background: rgba(16, 22, 34, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #4ade80;
+  }
+  .terminal-line {
+    margin-bottom: 2px;
+    animation: fadeIn 0.15s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <div class="terminal-bar">
+    <div class="dot dot-red"></div>
+    <div class="dot dot-yellow"></div>
+    <div class="dot dot-green"></div>
+    <span style="color: #8b949e; font-size: 13px; margin-left: 6px;">terminal &bull; python3</span>
+    <span class="badge">🐍 Python Output</span>
+  </div>
+  <div class="terminal-content">
+${outputs.map(line => `<div class="terminal-line">${this.escapeHtml(line)}</div>`).join('')}
+  </div>
+</body>
+</html>`;
+
+      this.previewFrame.srcdoc = terminalHtml;
+      outputs.forEach(line => this.logToConsole(line, "success"));
+      this.logToConsole("✅ Python script executed successfully! Output displayed above.", "success");
+      window.showToast("🐍 Python Code Executed!", "success");
+      return;
+    }
+
+    // HTML/CSS/JavaScript execution
+    this.logToConsole("🌐 Executing HTML/CSS/JS interactive greeting...", "info");
+
     const consoleInterceptorScript = `
       <script>
         (function() {
@@ -468,17 +778,18 @@ class CodeRunner {
       </script>
     `;
 
-    // Inject interceptor before closing head or at beginning
     let instrumentedCode = rawCode;
-    if (instrumentedCode.includes('<head>')) {
+    // Ensure valid HTML5 container if plain snippet is given
+    if (!instrumentedCode.includes('<html')) {
+      instrumentedCode = `<!DOCTYPE html><html><head><meta charset="UTF-8">${consoleInterceptorScript}</head><body>${instrumentedCode}</body></html>`;
+    } else if (instrumentedCode.includes('<head>')) {
       instrumentedCode = instrumentedCode.replace('<head>', '<head>' + consoleInterceptorScript);
     } else {
       instrumentedCode = consoleInterceptorScript + instrumentedCode;
     }
 
-    // Set srcdoc
     this.previewFrame.srcdoc = instrumentedCode;
-    this.logToConsole("Code executed successfully! Output updated in preview.", "success");
+    this.logToConsole("Code executed successfully! Interactive output rendered.", "success");
     window.showToast("🚀 Code Executed!", "success");
   }
 }

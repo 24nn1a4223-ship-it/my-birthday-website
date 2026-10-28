@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
       sec.classList.toggle('active', sec.id === targetTabId);
     });
 
+    if (targetTabId === 'tab-code' && window.codeRunnerInstance) {
+      setTimeout(() => window.codeRunnerInstance.runCode(), 60);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
